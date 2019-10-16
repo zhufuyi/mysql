@@ -10,3 +10,6 @@
 
 <br>
 
+## 使用模板
+
+使用方式请看[示例](https://github.com/zhufuyi/mysql/blob/master/mysql_test.go)。

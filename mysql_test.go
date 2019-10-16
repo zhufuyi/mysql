@@ -21,7 +21,7 @@ type User struct {
 func init() {
 	AddTables(&User{})
 
-	err := InitMysql(addr, true)
+	err := Init(addr, true)
 	if err != nil {
 		logger.Fatal("connect to mysql failed", logger.Err(err), logger.String("addr", addr))
 	}

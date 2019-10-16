@@ -17,8 +17,8 @@ var (
 	ErrNotFound = errors.New("record not found")
 )
 
-//InitMysql 初始化mysql
-func InitMysql(addr string, isEnableLog ...bool) error {
+// Init 初始化mysql
+func Init(addr string, isEnableLog ...bool) error {
 	var err error
 
 	db, err = gorm.Open("mysql", addr)
@@ -26,7 +26,6 @@ func InitMysql(addr string, isEnableLog ...bool) error {
 		return err
 	}
 
-	db.DB()
 	db.DB().SetMaxIdleConns(3)                  // 空闲连接数
 	db.DB().SetMaxOpenConns(100)                // 最大连接数
 	db.DB().SetConnMaxLifetime(3 * time.Minute) // 3分钟后断开多余的空闲连接
