@@ -5,9 +5,13 @@ import (
 
 	"time"
 
+	"strings"
+
 	"github.com/jinzhu/gorm"
 	"github.com/zhufuyi/logger"
 )
+
+var addr = "root:123456@(192.168.101.88:3306)/account?charset=utf8mb4&parseTime=True&loc=Local"
 
 type User struct {
 	Model
@@ -17,22 +21,22 @@ type User struct {
 	Gender string `gorm:"type:varchar(10);not null" json:"gender"`
 }
 
-// 把所有表对应的对象添加过来
+
 func init() {
-	AddTables(&User{})
+	AddTables(&User{}) // 把所有表对应的对象添加过来
+
+	//RegisterTLS("./ca.pem") // 只使用ca.pem认证，配置文件设置了require_secure_transport = ON情况下使用
+	//RegisterTLS("./ca.pem", "./client-key.pem", "./client-cert.pem") // mysql设置用户强制要求x509认证时使用
 
 	err := Init(addr, true)
 	if err != nil {
-		logger.Fatal("connect to mysql failed", logger.Err(err), logger.String("addr", addr))
+		logger.Fatal("connect to mysql failed", logger.Err(err), logger.Any("addr", strings.Split(addr, "@")[1:]))
 	}
 	logger.Info("connect mysql success")
 }
 
-var addr = "root:123456@(192.168.101.88)/account?charset=utf8mb4&parseTime=True&loc=Local"
+// ----------------------------------------------------- 插入数据 --------------------------------------------
 
-// -------------------------------------------------------------------------------------------------
-
-// 插入数据
 func TestInsert(t *testing.T) {
 	user := &User{Name: "小乔3", Age: 15, Gender: "女"}
 	if err := GetDB().Create(user).Error; err != nil {
@@ -40,9 +44,8 @@ func TestInsert(t *testing.T) {
 	}
 }
 
-// -------------------------------------------------------------------------------------------------
+// ---------------------------------------------------- 删除 ---------------------------------------------
 
-// 删除
 func TestDelete(t *testing.T) {
 	// 软删除，查询时会被忽略，如果想查询被软删除记录，在where前使用Unscoped()
 	if err := GetDB().Where("name = ?", "小乔2").Delete(&User{}).Error; err != nil {
@@ -55,9 +58,8 @@ func TestDelete(t *testing.T) {
 	}
 }
 
-// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------- 修改 -----------------------------------------------
 
-// 修改
 func TestUpdate(t *testing.T) {
 	// Save会更新所有字段，即使你没有赋值也会替换，不建议使用
 	//user := &User{}
@@ -85,7 +87,7 @@ func TestUpdate(t *testing.T) {
 	}
 }
 
-// -------------------------------------------------------------------------------------------------
+// ------------------------------------------------- 查询 ------------------------------------------------
 
 // first和find区别是：first获取一条记录，未找到时会返回错误，find获取多条记录，未找到记录返回空，不会报错
 func TestQueryNormal(t *testing.T) {
@@ -383,9 +385,8 @@ func TestQueryWithCount(t *testing.T) {
 	logger.Info("count 统计数量，并获取结果", logger.Int("count", count), logger.Any("users", users))
 }
 
-// -------------------------------------------------------------------------------------------------
+// ------------------------------------------------- 事务 ------------------------------------------------
 
-// 事务
 func TestTransaction(t *testing.T) {
 	if err := CreatePeople(); err != nil {
 		t.Error(err)
