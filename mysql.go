@@ -82,7 +82,7 @@ type Model struct {
 // KV map类型
 type KV map[string]interface{}
 
-// TxRecover 回收事务过程中的panic，使用时在前面添加defer关键字，例如：defer TxRecover(tx)
+// TxRecover 在事务执行过程发生panic后回滚，使用时在前面添加defer关键字，例如：defer TxRecover(tx)
 func TxRecover(tx *gorm.DB) {
 	if r := recover(); r != nil {
 		fmt.Printf("transaction failed, err = %v\n", r)

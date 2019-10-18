@@ -395,7 +395,7 @@ func TestTransaction(t *testing.T) {
 func CreatePeople() error {
 	// 注意，当你在一个事务中应使用 tx 作为数据库句柄
 	tx := GetDB().Begin()
-	defer TxRecover(tx) // 防止panic回滚
+	defer TxRecover(tx) // 发生panic时回滚
 
 	var err error
 
