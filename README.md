@@ -12,4 +12,6 @@
 
 ## 使用模板
 
-使用方式请看[示例](https://github.com/zhufuyi/mysql/blob/master/mysql_test.go)。
+使用方式请看[示例](./mysql_test.go)。
+
+注：测试时可以先导入[user.sql](./user.sql)表和数据。

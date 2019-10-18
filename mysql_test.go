@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"time"
-
 	"strings"
 
 	"github.com/jinzhu/gorm"
@@ -35,7 +34,7 @@ func init() {
 	logger.Info("connect mysql success")
 }
 
-// ----------------------------------------------------- 插入数据 --------------------------------------------
+// ----------------------------------------------------- 插入 --------------------------------------------
 
 func TestInsert(t *testing.T) {
 	user := &User{Name: "小乔3", Age: 15, Gender: "女"}
